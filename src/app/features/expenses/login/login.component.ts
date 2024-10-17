@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoginStrings } from '../../../strings/login.strings';
 import { AuthService } from '../../../services/RouteGuard/auth.service';
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../../../environment/environment';
 
 @Component({
   selector: 'app-login',
