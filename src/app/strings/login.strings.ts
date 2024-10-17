@@ -1,3 +1,4 @@
 export const LoginStrings = {
-    loginError: "Login Failed"
+    loginError: "Login Failed",
+    adminText: "admin"
 }

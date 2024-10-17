@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { throwError } from 'rxjs';
 import { LoginStrings } from '../../../strings/login.strings';
+import { AuthService } from '../../../services/RouteGuard/auth.service';
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../../../environment/environment';
 
 @Component({
   selector: 'app-login',
@@ -15,9 +17,8 @@ import { LoginStrings } from '../../../strings/login.strings';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   router: Router;
-  errorMessage: string = LoginStrings.loginError
 
-  constructor(private fb: FormBuilder, private rt: Router) {
+  constructor(private fb: FormBuilder, private rt: Router, public authService: AuthService) {
     this.loginForm = this.fb.group({
       userName: ['', Validators.required],
       passWord: ['', Validators.required]
@@ -29,13 +30,14 @@ export class LoginComponent implements OnInit {
 
   }
 
-  loginAction(): void {
-    if (this.loginForm.value.userName === "admin" && this.loginForm.value.passWord === "admin") {
-      this.router.navigate(['/expense-list'])
-      console.log('success')
-    } else {
-      throwError(() => new Error(this.errorMessage))
-    }
+  async loginAction(): Promise<void> {
+    const userNameValue: string = this.loginForm.value.userName;
+    const passWordValue: string = this.loginForm.value.passWord;
+
+    this.authService.signInWithEmailAndPassword(userNameValue, passWordValue).subscribe(() => {
+      this.router.navigate(['/expense-list']);
+    })
+
   }
 
 }
