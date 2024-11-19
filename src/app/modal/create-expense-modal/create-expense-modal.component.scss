@@ -1,0 +1,22 @@
+:host {
+    .dialog-title {
+        padding-left: 30px;
+    }
+
+    .dialog-content {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+
+
+        .field-fixed-width {
+            width: 212px;
+        }
+    }
+
+    .button-wrap {
+        padding-right: 30px;
+        float: right;
+    }
+}

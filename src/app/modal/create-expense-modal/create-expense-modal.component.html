@@ -1,0 +1,44 @@
+<mat-dialog-content>
+    <h2 class="dialog-title" mat-dialog-title>{{data.title}}</h2>
+
+    <form class="dialog-content" [formGroup]="createExpenseForm">
+        <mat-form-field class="field-fixed-width">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date" />
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Description</mat-label>
+            <input matInput formControlName="description" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Purpose</mat-label>
+            <input matInput formControlName="purpose" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Paid</mat-label>
+            <input matInput formControlName="paid" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>For</mat-label>
+            <input matInput formControlName="for" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Amount</mat-label>
+            <input matInput formControlName="amount" />
+        </mat-form-field>
+    </form>
+
+    <div class="button-wrap">
+        <button mat-button (click)="onCancel()">Cancel</button>
+        <button mat-button (click)="onSave()">Save</button>
+    </div>
+
+</mat-dialog-content>

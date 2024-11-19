@@ -7,6 +7,7 @@ import { provideFirebaseApp } from '@angular/fire/app';
 import { app, auth, db } from './environment/environment';
 import { provideAuth } from '@angular/fire/auth';
 import { provideFirestore } from '@angular/fire/firestore';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
@@ -14,6 +15,6 @@ export const appConfig: ApplicationConfig = {
   provideClientHydration(),
   provideFirebaseApp(() => app),
   provideAuth(() => auth),
-  provideFirestore(() => db)
+  provideFirestore(() => db), provideAnimationsAsync()
   ]
 };

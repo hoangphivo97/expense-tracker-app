@@ -10,23 +10,26 @@
             <!-- @if (service.loading$ | async) {
             <span class="col col-form-label">Loading...</span>
             } -->
+            <button class="create-expense-button" mat-button (click)="openCreateExpenseModal()">
+                Create New Expense
+            </button>
         </div>
 
-        <table class="table table-striped">
+        <!-- <table class="table table-striped">
             <thead>
                 <tr>
-                    <th scope="col" sortable="name">Date</th>
-                    <th scope="col" sortable="area">Description</th>
-                    <th scope="col" sortable="population">Porpuse</th>
-                    <th scope="col" sortable="population">Paid</th>
-                    <th scope="col" sortable="population">For</th>
-                    <th scope="col" sortable="population">Amount</th>
+                    <th class="uppercase_title" scope="col" sortable="name">{{expenseListTableName.date}}</th>
+                    <th class="uppercase_title" scope="col" sortable="area">{{expenseListTableName.description}}</th>
+                    <th class="uppercase_title" scope="col" sortable="population">{{expenseListTableName.porpuse}}</th>
+                    <th class="uppercase_title" scope="col" sortable="population">{{expenseListTableName.paid}}</th>
+                    <th class="uppercase_title" scope="col" sortable="population">{{expenseListTableName.for}}</th>
+                    <th class="uppercase_title" scope="col" sortable="population">{{expenseListTableName.amount}}</th>
                 </tr>
             </thead>
             <tbody>
                 @for (expense of expenseList ; track expense.id) {
                 <tr>
-                    <td><ngb-highlight [result]="expense.date" [term]="searchTerm" /></td>
+                    <td>{{expense.date | date : "dd/MM/yyyy"}}</td>
                     <td>{{expense.description}}</td>
                     <td>{{expense.purpose}}</td>
                     <td>{{expense.paid}}</td>
@@ -39,6 +42,60 @@
                 </tr>
                 }
             </tbody>
+        </table> -->
+
+        <table mat-table [dataSource]="expenseList">
+            <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->
+
+            <!-- Position Column -->
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef>Date</th>
+                <td mat-cell *matCellDef="let element"> {{element.date | date : 'dd/MM/yyyy'}} </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>Description</th>
+                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="purpose">
+                <th mat-header-cell *matHeaderCellDef>Purpose</th>
+                <td mat-cell *matCellDef="let element"> {{element.purpose}} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="paid">
+                <th mat-header-cell *matHeaderCellDef>Paid</th>
+                <td mat-cell *matCellDef="let element"> {{element.paid}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="for">
+                <th mat-header-cell *matHeaderCellDef>For</th>
+                <td mat-cell *matCellDef="let element"> {{element.for}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="amount">
+                <th mat-header-cell *matHeaderCellDef>Amount</th>
+                <td mat-cell *matCellDef="let element"> {{element.amount}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                    <a class="button" aria-label="delete-btn">
+                        <mat-icon color="warn">delete</mat-icon>
+                    </a>
+                    <a class="button" aria-label="edit-btn">
+                        <mat-icon color="accent">edit</mat-icon>
+                    </a>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
 
         <!-- <div class="d-flex justify-content-between p-2">

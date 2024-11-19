@@ -9,3 +9,7 @@ export interface ExpenseList {
     // budget: number;
     // remainBalance: number;
 }
+
+export interface createExpense extends Omit<ExpenseList, "id">{
+    
+}

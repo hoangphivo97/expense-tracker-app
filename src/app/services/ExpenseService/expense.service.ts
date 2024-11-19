@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { from, map, Observable } from 'rxjs';
-import { ExpenseList } from '../../models/expense.interface';
+import { createExpense, ExpenseList } from '../../models/expense.interface';
 import { db } from '../../environment/environment';
-import { collection, doc, getDocs, query, QuerySnapshot, where } from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, QuerySnapshot, where } from 'firebase/firestore';
+import axios from 'axios';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExpenseService {
   expensesCollection = collection(db, 'expense')
+  firestoreUrl = ''
 
   constructor() {
   }
@@ -23,6 +24,10 @@ export class ExpenseService {
         }))
       })
     )
+  }
+
+  createExpense(data: createExpense){
+    return from(addDoc(this.expensesCollection, data))
   }
 
   searchExpenseDate(searchTerm: string): Observable<ExpenseList[]> {
