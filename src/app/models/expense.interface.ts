@@ -13,3 +13,7 @@ export interface ExpenseList {
 export interface createExpense extends Omit<ExpenseList, "id">{
     
 }
+
+export interface editExpenseData extends createExpense {
+    
+}

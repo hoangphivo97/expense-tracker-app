@@ -1,10 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { HeaderComponent } from "../../../shared/components/header/header.component";
 import { FooterComponent } from "../../../shared/components/footer/footer.component";
-import { createExpense, ExpenseList } from '../../../models/expense.interface';
+import { editExpenseData, ExpenseList } from '../../../models/expense.interface';
 import { ExpenseService } from '../../../services/ExpenseService/expense.service';
-import { NgbHighlight, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
-import { AsyncPipe, CommonModule, DecimalPipe } from '@angular/common';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ExpenseListFieldName } from '../../../strings/login.strings';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,20 +13,22 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog'
 import { CreateExpenseModalComponent } from '../../../modal/create-expense-modal/create-expense-modal.component';
 import { DialogData } from '../../../models/modal.interface';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-expense-list',
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, NgbPaginationModule, NgbHighlight, FormsModule, AsyncPipe, DecimalPipe, CommonModule, MatButtonModule, MatTableModule, MatIconModule],
+  imports: [HeaderComponent, FooterComponent, NgbPaginationModule, FormsModule, DecimalPipe, CommonModule, MatButtonModule, MatTableModule, MatIconModule],
   templateUrl: './expense-list.component.html',
-  styleUrl: './expense-list.component.scss'
+  styleUrl: './expense-list.component.scss',
 })
-export class ExpenseListComponent implements OnInit {
+export class ExpenseListComponent implements OnInit, OnDestroy {
   expenseList: ExpenseList[] = [];
   searchTerm: string = ""
   expenseListTableName = ExpenseListFieldName
   displayedColumns: string[] = ['date', 'description', 'purpose', 'paid', 'for', 'amount', 'action'];
   readonly dialog = inject(MatDialog)
+  private destroy$ = new Subject<void>()
 
   constructor(private expenseService: ExpenseService) { }
 
@@ -35,8 +37,10 @@ export class ExpenseListComponent implements OnInit {
   }
 
   getExpenseList() {
-    this.expenseService.getExpenseList().subscribe((res: ExpenseList[]) => {
-      this.expenseList = res
+    this.expenseService.getExpenseList().pipe(takeUntil(this.destroy$)).subscribe((data: ExpenseList[]) => {
+      this.expenseList = data
+    }, (error) => {
+      console.log(error)
     })
   }
 
@@ -45,7 +49,7 @@ export class ExpenseListComponent implements OnInit {
     //   height: '500px',
     //   width: '600px'
     // }
-    const dialogRef =  this.dialog.open(CreateExpenseModalComponent, {
+    const dialogRef = this.dialog.open(CreateExpenseModalComponent, {
       height: '400px',
       width: '600px',
       data: { title: "Create new Expense", action: "Create", isSuccess: false } as DialogData,
@@ -53,9 +57,23 @@ export class ExpenseListComponent implements OnInit {
     })
 
     dialogRef.afterClosed().subscribe((res: DialogData) => {
-      if(!res.isSuccess) return
+      if (!res.isSuccess) return
       this.getExpenseList()
     })
-}
+  }
+
+  openEditExpenseModal(data: editExpenseData) {
+    const dialogRef = this.dialog.open(CreateExpenseModalComponent, {
+      height: '400px',
+      width: '600px',
+      data: { title: "Edit Expense", action: "Edit", isSuccess: false, data: data } as DialogData,
+      disableClose: true
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(); // Emit the signal to unsubscribe
+    this.destroy$.complete(); // Complete the subject
+  }
 
 }

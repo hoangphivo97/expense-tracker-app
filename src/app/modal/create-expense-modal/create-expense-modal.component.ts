@@ -11,7 +11,7 @@ import { ExpenseService } from '../../services/ExpenseService/expense.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DateAdapter, MAT_DATE_FORMATS, MatDateFormats } from '@angular/material/core';
 import { CustomDateAdapter } from '../../shared/custom-date';
-import { createExpense } from '../../models/expense.interface';
+import { createExpense, editExpenseData } from '../../models/expense.interface';
 import { DecimalPipe } from '@angular/common';
 
 export const MY_DATE_FORMATS: MatDateFormats = {
@@ -38,7 +38,7 @@ export const MY_DATE_FORMATS: MatDateFormats = {
   templateUrl: './create-expense-modal.component.html',
   styleUrl: './create-expense-modal.component.scss',
 })
-export class CreateExpenseModalComponent  {
+export class CreateExpenseModalComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<CreateExpenseModalComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
   private formBuilder = inject(FormBuilder)
@@ -56,15 +56,25 @@ export class CreateExpenseModalComponent  {
     amount: [0, Validators.required]
   })
 
+  async ngOnInit(): Promise<void> {
+    await this.handleEditModal()
+  }
+
+  handleEditModal() {
+    if (this.data.action !== 'Edit') return;
+    this.createExpenseForm.patchValue(this.data.data as editExpenseData)
+  }
+
 
   onSave() {
-    if (!this.createExpenseForm.valid) return
+    if (!this.createExpenseForm.valid ) return
     const expenseData = this.createExpenseForm.value as unknown as createExpense
     const ISODate = new Date(expenseData.date).toISOString();
     const payload: createExpense = {
       ...expenseData,
       date: ISODate,
     }
+
     this.expenseService.createExpense(payload).subscribe(
       {
         error: e => { console.log(e) },
