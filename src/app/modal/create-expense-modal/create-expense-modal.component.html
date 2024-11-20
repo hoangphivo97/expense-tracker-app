@@ -32,7 +32,8 @@
 
         <mat-form-field>
             <mat-label>Amount</mat-label>
-            <input matInput formControlName="amount" />
+            <input matInput formControlName="amount" [value]="formattedValue"
+            (input)="onInput($event)"/>
         </mat-form-field>
     </form>
 

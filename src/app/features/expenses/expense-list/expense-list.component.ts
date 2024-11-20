@@ -48,7 +48,8 @@ export class ExpenseListComponent implements OnInit {
     const dialogRef =  this.dialog.open(CreateExpenseModalComponent, {
       height: '400px',
       width: '600px',
-      data: { title: "Create new Expense", action: "Create", isSuccess: false } as DialogData
+      data: { title: "Create new Expense", action: "Create", isSuccess: false } as DialogData,
+      disableClose: true
     })
 
     dialogRef.afterClosed().subscribe((res: DialogData) => {

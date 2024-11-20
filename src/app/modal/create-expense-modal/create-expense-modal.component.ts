@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnChanges, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DialogData } from '../../models/modal.interface';
 import { MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
@@ -12,6 +12,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DateAdapter, MAT_DATE_FORMATS, MatDateFormats } from '@angular/material/core';
 import { CustomDateAdapter } from '../../shared/custom-date';
 import { createExpense } from '../../models/expense.interface';
+import { DecimalPipe } from '@angular/common';
 
 export const MY_DATE_FORMATS: MatDateFormats = {
   parse: {
@@ -28,20 +29,23 @@ export const MY_DATE_FORMATS: MatDateFormats = {
 @Component({
   selector: 'app-create-expense-modal',
   standalone: true,
-  imports: [MatDialogTitle, MatDialogContent, MatFormField, MatLabel, ReactiveFormsModule, MatInputModule, MatButton, MatDatepickerModule],
+  imports: [MatDialogTitle, MatDialogContent, MatFormField, MatLabel, ReactiveFormsModule, MatInputModule, MatButton, MatDatepickerModule, DecimalPipe],
   providers: [
     { provide: DateAdapter, useClass: CustomDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    DecimalPipe
   ],
   templateUrl: './create-expense-modal.component.html',
   styleUrl: './create-expense-modal.component.scss',
 })
-export class CreateExpenseModalComponent {
+export class CreateExpenseModalComponent  {
   readonly dialogRef = inject(MatDialogRef<CreateExpenseModalComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
   private formBuilder = inject(FormBuilder)
   readonly expenseService = inject(ExpenseService)
+  private decimalPipe = inject(DecimalPipe)
 
+  formattedValue: string = '';
 
   createExpenseForm = this.formBuilder.group({
     date: ['', Validators.required],
@@ -49,7 +53,7 @@ export class CreateExpenseModalComponent {
     purpose: ['', Validators.required],
     paid: ['', Validators.required],
     for: [''],
-    amount: ['', Validators.required]
+    amount: [0, Validators.required]
   })
 
 
@@ -71,6 +75,23 @@ export class CreateExpenseModalComponent {
 
   onCancel() {
     this.dialogRef.close({ title: "Create new Expense", action: "Create", isSuccess: false })
+  }
+
+  onInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    let rawValue = inputElement.value.replace(/,/g, ''); // Remove commas
+    let numericValue = parseFloat(rawValue); // Parse as float
+
+    // Update the form control with raw numeric value
+    if (!isNaN(numericValue)) {
+      this.createExpenseForm.get('amount')?.setValue(numericValue, { emitEvent: false }); // Don't emit value changes
+    } else {
+      this.createExpenseForm.get('amount')?.setValue(null, { emitEvent: false });
+    }
+
+    // Format the display value
+    const formattedValue = this.decimalPipe.transform(numericValue, '1.0-2') || '';
+    inputElement.value = formattedValue; // Update input value instantly
   }
 
 }
