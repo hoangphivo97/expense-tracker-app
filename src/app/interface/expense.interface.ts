@@ -10,10 +10,10 @@ export interface ExpenseList {
     // remainBalance: number;
 }
 
-export interface createExpense extends Omit<ExpenseList, "id">{
-    
+export interface createExpense extends Omit<ExpenseList, "id"> {
+
 }
 
-export interface editExpenseData extends createExpense {
-    
+export interface editExpense extends ExpenseList {
+
 }

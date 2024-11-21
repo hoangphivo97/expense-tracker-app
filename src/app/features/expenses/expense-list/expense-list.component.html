@@ -85,7 +85,7 @@
             <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let element">
-                    <a class="button" aria-label="delete-btn">
+                    <a (click)="openDeleteConfirmModal(element.id)" class="button" aria-label="delete-btn">
                         <mat-icon color="warn">delete</mat-icon>
                     </a>
                     <a (click)="openEditExpenseModal(element)" class="button" aria-label="edit-btn">

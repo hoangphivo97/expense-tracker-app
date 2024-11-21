@@ -11,3 +11,7 @@ export const ExpenseListFieldName = {
     paid: 'paid',
     for: 'for'
 }
+
+export const ModalMessage = {
+    delete: "This is can not undo!"
+}

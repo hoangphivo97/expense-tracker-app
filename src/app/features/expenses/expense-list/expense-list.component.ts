@@ -1,19 +1,20 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { HeaderComponent } from "../../../shared/components/header/header.component";
 import { FooterComponent } from "../../../shared/components/footer/footer.component";
-import { editExpenseData, ExpenseList } from '../../../models/expense.interface';
+import { createExpense, editExpense, ExpenseList } from '../../../interface/expense.interface';
 import { ExpenseService } from '../../../services/ExpenseService/expense.service';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ExpenseListFieldName } from '../../../strings/login.strings';
+import { ExpenseListFieldName, ModalMessage } from '../../../strings/login.strings';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog'
+import { MatDialog, MatDialogRef } from '@angular/material/dialog'
 import { CreateExpenseModalComponent } from '../../../modal/create-expense-modal/create-expense-modal.component';
-import { DialogData } from '../../../models/modal.interface';
+import { DialogActionEnum, DialogData } from '../../../interface/modal.interface';
 import { Subject, takeUntil } from 'rxjs';
+import { BaseModalComponent } from '../../../modal/base-modal/base-modal.component';
 
 @Component({
   selector: 'app-expense-list',
@@ -29,6 +30,7 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['date', 'description', 'purpose', 'paid', 'for', 'amount', 'action'];
   readonly dialog = inject(MatDialog)
   private destroy$ = new Subject<void>()
+  dialogActionEnum = DialogActionEnum
 
   constructor(private expenseService: ExpenseService) { }
 
@@ -45,30 +47,43 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
   }
 
   openCreateExpenseModal() {
-    // const dialogSize = {
-    //   height: '500px',
-    //   width: '600px'
-    // }
     const dialogRef = this.dialog.open(CreateExpenseModalComponent, {
       height: '400px',
       width: '600px',
-      data: { title: "Create new Expense", action: "Create", isSuccess: false } as DialogData,
+      data: { title: "Create new Expense", action: this.dialogActionEnum.Create, isSuccess: false } as DialogData,
       disableClose: true
     })
 
+    this.getListAfterSuccessCallApi(dialogRef)
+  }
+
+  openEditExpenseModal(data: editExpense) {
+    const dialogRef = this.dialog.open(CreateExpenseModalComponent, {
+      height: '400px',
+      width: '600px',
+      data: { title: "Edit Expense", action: this.dialogActionEnum.Edit, isSuccess: false, data: data } as DialogData,
+      disableClose: true
+    })
+
+    this.getListAfterSuccessCallApi(dialogRef)
+  }
+
+  getListAfterSuccessCallApi(dialogRef: MatDialogRef<CreateExpenseModalComponent | BaseModalComponent>) {
     dialogRef.afterClosed().subscribe((res: DialogData) => {
       if (!res.isSuccess) return
       this.getExpenseList()
     })
   }
 
-  openEditExpenseModal(data: editExpenseData) {
-    const dialogRef = this.dialog.open(CreateExpenseModalComponent, {
-      height: '400px',
-      width: '600px',
-      data: { title: "Edit Expense", action: "Edit", isSuccess: false, data: data } as DialogData,
+  openDeleteConfirmModal(id: string) {
+    const dialogRef = this.dialog.open(BaseModalComponent, {
+      height: '200px',
+      width: '400px',
+      data: { title: "Delete", action: this.dialogActionEnum.Delete, isSuccess: false, data: id , content: ModalMessage.delete} as DialogData,
       disableClose: true
     })
+
+    this.getListAfterSuccessCallApi(dialogRef)
   }
 
   ngOnDestroy(): void {

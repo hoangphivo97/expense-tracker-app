@@ -1,6 +1,6 @@
 import { Component, inject, OnChanges, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DialogData } from '../../models/modal.interface';
+import { DialogActionEnum, DialogData } from '../../interface/modal.interface';
 import { MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
 import { MatFormField, } from '@angular/material/form-field';
 import { MatLabel } from '@angular/material/form-field';
@@ -11,7 +11,7 @@ import { ExpenseService } from '../../services/ExpenseService/expense.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DateAdapter, MAT_DATE_FORMATS, MatDateFormats } from '@angular/material/core';
 import { CustomDateAdapter } from '../../shared/custom-date';
-import { createExpense, editExpenseData } from '../../models/expense.interface';
+import { createExpense, editExpense } from '../../interface/expense.interface';
 import { DecimalPipe } from '@angular/common';
 
 export const MY_DATE_FORMATS: MatDateFormats = {
@@ -46,6 +46,7 @@ export class CreateExpenseModalComponent implements OnInit {
   private decimalPipe = inject(DecimalPipe)
 
   formattedValue: string = '';
+  dialogActionEnum = DialogActionEnum
 
   createExpenseForm = this.formBuilder.group({
     date: ['', Validators.required],
@@ -57,34 +58,54 @@ export class CreateExpenseModalComponent implements OnInit {
   })
 
   async ngOnInit(): Promise<void> {
-    await this.handleEditModal()
+    await this.patchValue()
   }
 
-  handleEditModal() {
-    if (this.data.action !== 'Edit') return;
-    this.createExpenseForm.patchValue(this.data.data as editExpenseData)
+  patchValue() {
+    if (this.data.action !== this.dialogActionEnum.Edit) return;
+    this.createExpenseForm.patchValue(this.data.data as createExpense)
   }
 
 
   onSave() {
-    if (!this.createExpenseForm.valid ) return
-    const expenseData = this.createExpenseForm.value as unknown as createExpense
+    if (!this.createExpenseForm.valid) return
+    const expenseData = this.createExpenseForm.value as unknown as (createExpense | editExpense)
     const ISODate = new Date(expenseData.date).toISOString();
-    const payload: createExpense = {
+    const payload: createExpense | editExpense = {
       ...expenseData,
       date: ISODate,
     }
 
+    if (this.data.action === this.dialogActionEnum.Create) {
+      this.createExpense(payload as createExpense)
+    } else if (this.data.action === this.dialogActionEnum.Edit) {
+      this.editExpense((this.data.data as editExpense).id, payload as editExpense)
+    } else {
+
+    }
+  }
+
+  createExpense(payload: createExpense) {
     this.expenseService.createExpense(payload).subscribe(
       {
         error: e => { console.log(e) },
-        complete: () => this.dialogRef.close({ title: "Create new Expense", action: "Create", isSuccess: true } as DialogData)
+        complete: () => this.dialogRef.close({ title: "Create new Expense", action: this.dialogActionEnum.Create, isSuccess: true } as DialogData)
+      }
+    )
+  }
+
+  editExpense(id: string, payload: editExpense) {
+    this.expenseService.editExpense(id, payload).subscribe(
+      {
+        error: e => { console.log(e) },
+        complete: () => this.dialogRef.close({ title: "Edit Expense", action: this.dialogActionEnum.Edit, isSuccess: true } as DialogData
+        )
       }
     )
   }
 
   onCancel() {
-    this.dialogRef.close({ title: "Create new Expense", action: "Create", isSuccess: false })
+    this.dialogRef.close({ title: "Create new Expense", action: this.dialogActionEnum.Create, isSuccess: false } as DialogData)
   }
 
   onInput(event: Event): void {

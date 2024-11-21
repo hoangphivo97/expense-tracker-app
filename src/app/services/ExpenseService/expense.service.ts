@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { from, map, Observable } from 'rxjs';
-import { createExpense, editExpenseData, ExpenseList } from '../../models/expense.interface';
+import { createExpense, ExpenseList } from '../../interface/expense.interface';
 import { db } from '../../environment/environment';
-import { addDoc, collection, doc, getDocs, getFirestore, query, QuerySnapshot, updateDoc, where } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, query, QuerySnapshot, updateDoc, where } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -29,9 +29,14 @@ export class ExpenseService {
     return from(addDoc(this.expensesCollection, data))
   }
 
-  editExpense(id: string, data: editExpenseData) {
+  editExpense(id: string, data: createExpense) {
     const expenseRef = doc(this.firestore, 'expense', id);
     return from(updateDoc(expenseRef, data))
+  }
+
+  deleteExpense(id: string) {
+    const expenseRef = doc(this.firestore, 'expense', id);
+    return from(deleteDoc(expenseRef))
   }
 
 
