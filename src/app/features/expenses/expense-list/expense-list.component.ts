@@ -15,6 +15,9 @@ import { CreateExpenseModalComponent } from '../../../modal/create-expense-modal
 import { DialogActionEnum, DialogData } from '../../../interface/modal.interface';
 import { Subject, takeUntil } from 'rxjs';
 import { BaseModalComponent } from '../../../modal/base-modal/base-modal.component';
+import { UserServiceService } from '../../../services/UserService/user-service.service';
+import { CurrencyEnum } from '../../../interface/settings.interface';
+import { SettingsServiceService } from '../../../services/SettingsService/settings-service.service';
 
 @Component({
   selector: 'app-expense-list',
@@ -24,6 +27,8 @@ import { BaseModalComponent } from '../../../modal/base-modal/base-modal.compone
   styleUrl: './expense-list.component.scss',
 })
 export class ExpenseListComponent implements OnInit, OnDestroy {
+  readonly userService = inject(UserServiceService)
+  readonly settingsService = inject(SettingsServiceService)
   expenseList: ExpenseList[] = [];
   searchTerm: string = ""
   expenseListTableName = ExpenseListFieldName
@@ -79,16 +84,30 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(BaseModalComponent, {
       height: '200px',
       width: '400px',
-      data: { title: "Delete", action: this.dialogActionEnum.Delete, isSuccess: false, data: id , content: ModalMessage.delete} as DialogData,
+      data: { title: "Delete", action: this.dialogActionEnum.Delete, isSuccess: false, data: id, content: ModalMessage.delete } as DialogData,
       disableClose: true
     })
 
     this.getListAfterSuccessCallApi(dialogRef)
   }
 
+  getUserSettings() {
+    this.settingsService.getUserSettings().subscribe(res => {
+       res?.currency as CurrencyEnum
+    })
+  }
+
+  
+
+  getEnumString(enumObj: any, value: number): string {
+    return enumObj[value];
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next(); // Emit the signal to unsubscribe
     this.destroy$.complete(); // Complete the subject
   }
+
+
 
 }

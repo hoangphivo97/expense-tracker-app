@@ -2,11 +2,11 @@
 <div class="expense-list">
     <form>
         <div class="mb-6 row">
-            <label for="table-complete-search" class="col-xs-3 col-sm-auto col-form-label">Full text search:</label>
+            <!-- <label for="table-complete-search" class="col-xs-3 col-sm-auto col-form-label">Full text search:</label>
             <div class="col-xs-3 col-sm-auto">
                 <input id="table-complete-search" type="text" class="form-control" name="searchTerm"
                     [(ngModel)]="searchTerm" />
-            </div>
+            </div> -->
             <!-- @if (service.loading$ | async) {
             <span class="col col-form-label">Loading...</span>
             } -->
@@ -14,35 +14,6 @@
                 Create New Expense
             </button>
         </div>
-
-        <!-- <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th class="uppercase_title" scope="col" sortable="name">{{expenseListTableName.date}}</th>
-                    <th class="uppercase_title" scope="col" sortable="area">{{expenseListTableName.description}}</th>
-                    <th class="uppercase_title" scope="col" sortable="population">{{expenseListTableName.porpuse}}</th>
-                    <th class="uppercase_title" scope="col" sortable="population">{{expenseListTableName.paid}}</th>
-                    <th class="uppercase_title" scope="col" sortable="population">{{expenseListTableName.for}}</th>
-                    <th class="uppercase_title" scope="col" sortable="population">{{expenseListTableName.amount}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (expense of expenseList ; track expense.id) {
-                <tr>
-                    <td>{{expense.date | date : "dd/MM/yyyy"}}</td>
-                    <td>{{expense.description}}</td>
-                    <td>{{expense.purpose}}</td>
-                    <td>{{expense.paid}}</td>
-                    <td>{{expense.for}}</td>
-                    <td>{{expense.amount | number}}</td>
-                </tr>
-                } @empty {
-                <tr>
-                    <td colspan="4" style="text-align: center">No expense found</td>
-                </tr>
-                }
-            </tbody>
-        </table> -->
 
         <table mat-table [dataSource]="expenseList">
             <!--- Note that these columns can be defined in any order.

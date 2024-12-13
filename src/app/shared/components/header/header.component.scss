@@ -2,8 +2,18 @@
     display: flex;
     gap: 10px;
     padding-top: 10px;
+    justify-content: center;
+    align-items: center;
     
     .logout-button:hover{
         background-color: #ff2848;
+    }
+
+    .settings-icon{
+        cursor: pointer;
+    }
+
+    h1{
+        margin: 0;
     }
 }

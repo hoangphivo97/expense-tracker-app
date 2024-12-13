@@ -11,5 +11,6 @@ export interface DialogData {
 export enum DialogActionEnum {
     Create,
     Edit,
-    Delete
+    Delete,
+    Settings
 }

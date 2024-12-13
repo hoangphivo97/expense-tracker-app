@@ -1,0 +1,24 @@
+:host {
+    .dialog-wrap {
+        padding: 10px;
+
+        .dialog-title {
+            text-align: center;
+        }
+        
+        .button-wrap {
+            padding-right: 30px;
+            justify-content: flex-end;
+        }
+
+        .mat-mdc-dialog-content{
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .mat-mdc-select{
+            display: flex;
+            max-width: 40%;
+        }
+    }
+}

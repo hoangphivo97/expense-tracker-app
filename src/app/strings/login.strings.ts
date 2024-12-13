@@ -15,3 +15,9 @@ export const ExpenseListFieldName = {
 export const ModalMessage = {
     delete: "This is can not undo!"
 }
+
+export const CurrencyValue = {
+    VND: "VND",
+    USD: "USD",
+    EUR: "EUR"
+}

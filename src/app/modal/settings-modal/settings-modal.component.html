@@ -1,0 +1,21 @@
+<div class="dialog-wrap">
+    <h2 class="dialog-title" mat-dialog-title>{{data.title}}</h2>
+
+    <mat-dialog-content>
+        <mat-label>Currency</mat-label>
+        <mat-select disabled="true" [(value)]="currencyValue">
+            @for(item of currencyDropdownList; track item){
+            <mat-option [value]="item.value">{{item.name}}</mat-option>
+            }
+        </mat-select>
+    </mat-dialog-content>
+
+    <mat-dialog-content>
+        <mat-label>Date Format</mat-label>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="button-wrap">
+        <button mat-button (click)="onCancel()">Cancel</button>
+        <button mat-button (click)="onSave()">Save</button>
+    </mat-dialog-actions>
+</div>

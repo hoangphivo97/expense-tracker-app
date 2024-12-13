@@ -13,6 +13,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MatDateFormats } from '@angular/material
 import { CustomDateAdapter } from '../../shared/custom-date';
 import { createExpense, editExpense } from '../../interface/expense.interface';
 import { DecimalPipe } from '@angular/common';
+import { Auth } from '@angular/fire/auth';
 
 export const MY_DATE_FORMATS: MatDateFormats = {
   parse: {
@@ -44,6 +45,7 @@ export class CreateExpenseModalComponent implements OnInit {
   private formBuilder = inject(FormBuilder)
   readonly expenseService = inject(ExpenseService)
   private decimalPipe = inject(DecimalPipe)
+  private auth: Auth = inject(Auth)
 
   formattedValue: string = '';
   dialogActionEnum = DialogActionEnum
