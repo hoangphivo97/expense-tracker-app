@@ -29,7 +29,7 @@ export class HeaderComponent {
   openSettings() {
     const dialogRef = this.dialog.open(SettingsModalComponent, {
       height: '270px',
-      width: '400px',
+      width: '450px',
       data: { title: "Settings", action: this.dialogActionEnum.Settings, isSuccess: false } as DialogData,
       disableClose: true
     })

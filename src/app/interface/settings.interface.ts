@@ -4,11 +4,15 @@ export enum CurrencyEnum {
     EUR
 }
 
-export interface CurrencyDropdownList {
+export interface DropdownList<T> {
     name: string;
-    value: CurrencyEnum
+    value: T
 }
 
 export interface UserSettings{
     currency: CurrencyEnum;
 }
+
+export type CurrencyDropdownList = DropdownList<CurrencyEnum>
+
+export type DateFormatDropdownList = DropdownList<string>

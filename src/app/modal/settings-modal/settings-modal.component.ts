@@ -5,15 +5,16 @@ import { MatButton } from '@angular/material/button';
 import { MatLabel } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { SettingsServiceService } from '../../services/SettingsService/settings-service.service';
-import { CurrencyValue } from '../../strings/login.strings';
-import { CurrencyEnum, CurrencyDropdownList } from '../../interface/settings.interface';
+import { CurrencyStringValue, DateFormatStringValue, DateFormatValue } from '../../strings/login.strings';
+import { CurrencyEnum, CurrencyDropdownList, DateFormatDropdownList } from '../../interface/settings.interface';
 import { UserServiceService } from '../../services/UserService/user-service.service';
+import { AsyncPipe } from '@angular/common';
 
 
 @Component({
   selector: 'app-settings-modal',
   standalone: true,
-  imports: [MatDialogActions, MatDialogContent, MatButton, MatLabel, MatSelect, MatOption],
+  imports: [MatDialogActions, MatDialogContent, MatButton, MatLabel, MatSelect, MatOption, AsyncPipe],
   templateUrl: './settings-modal.component.html',
   styleUrl: './settings-modal.component.scss'
 })
@@ -25,33 +26,49 @@ export class SettingsModalComponent implements OnInit {
 
   currencyValue: CurrencyEnum = 0
 
+  selectedFormat: string = "";
+
   dialogActionEnum = DialogActionEnum
 
   currencyDropdownList: CurrencyDropdownList[] = [
-    { name: CurrencyValue.VND, value: CurrencyEnum.VND },
-    { name: CurrencyValue.USD, value: CurrencyEnum.USD },
-    { name: CurrencyValue.EUR, value: CurrencyEnum.EUR },
+    { name: CurrencyStringValue.VND, value: CurrencyEnum.VND },
+    { name: CurrencyStringValue.USD, value: CurrencyEnum.USD },
+    { name: CurrencyStringValue.EUR, value: CurrencyEnum.EUR },
+  ]
+
+  dateFormatDropdownList: DateFormatDropdownList[] = [
+    { name: DateFormatStringValue.DMY, value: DateFormatValue.DMY },
+    { name: DateFormatStringValue.MDY, value: DateFormatValue.MDY },
+    { name: DateFormatStringValue.YMD, value: DateFormatValue.YMD }
   ]
 
   ngOnInit(): void {
-    this.getCurrencyValue();
+    this.getDateFormat();
   }
 
-  getCurrencyValue() {
-    this.settingsService.getUserSettings().subscribe(res => {
-      this.currencyValue = res?.currency as CurrencyEnum
-    })
+  updateDateFormatGlobal(dateFormat: string) {
+    this.settingsService.setDateFormat(dateFormat)
   }
+
+  getDateFormat(){
+    this.selectedFormat = this.settingsService.getCurrDateFormat()
+  }
+
+
+  // getCurrencyValue() {
+  //   this.settingsService.getUserSettings().subscribe(res => {
+  //     this.currencyValue = res?.currency as CurrencyEnum
+  //   })
+  // }
 
   onSave() {
-    const payload = {
-      currency: this.currencyValue
-    }
-    this.settingsService.createSettingsForUser(payload).subscribe({
-      error: e => console.log(e),
-      complete: () => this.dialogRef.close({ title: "Settings", action: this.dialogActionEnum.Settings, isSuccess: true } as DialogData)
-    })
+    // this.settingsService.createSettingsForUser(payload).subscribe({
+    //   error: e => console.log(e),
+    //   complete: () => this.dialogRef.close({ title: "Settings", action: this.dialogActionEnum.Settings, isSuccess: true } as DialogData)
+    // })
+    this.updateDateFormatGlobal(this.selectedFormat)
   }
+
 
   onCancel() {
     this.dialogRef.close({ title: "Settings", action: this.dialogActionEnum.Settings, isSuccess: false } as DialogData)

@@ -12,6 +12,11 @@
 
     <mat-dialog-content>
         <mat-label>Date Format</mat-label>
+        <mat-select [(value)]="selectedFormat">
+            @for(item of dateFormatDropdownList; track item){
+            <mat-option [value]="item.value">{{item.name}}</mat-option>
+            }
+        </mat-select>
     </mat-dialog-content>
 
     <mat-dialog-actions class="button-wrap">

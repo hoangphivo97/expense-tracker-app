@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { HeaderComponent } from "../../../shared/components/header/header.component";
 import { FooterComponent } from "../../../shared/components/footer/footer.component";
 import { createExpense, editExpense, ExpenseList } from '../../../interface/expense.interface';
@@ -37,7 +37,7 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>()
   dialogActionEnum = DialogActionEnum
 
-  constructor(private expenseService: ExpenseService) { }
+  constructor(private expenseService: ExpenseService, private renderer: Renderer2, private settingService: SettingsServiceService) { }
 
   ngOnInit() {
     this.getExpenseList();
@@ -93,11 +93,11 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
 
   getUserSettings() {
     this.settingsService.getUserSettings().subscribe(res => {
-       res?.currency as CurrencyEnum
+      res?.currency as CurrencyEnum
     })
   }
 
-  
+
 
   getEnumString(enumObj: any, value: number): string {
     return enumObj[value];
@@ -108,6 +108,8 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
     this.destroy$.complete(); // Complete the subject
   }
 
-
+  get GlobalDateFormat(){
+    return this.settingService.getCurrDateFormat()
+  }
 
 }
