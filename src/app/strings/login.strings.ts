@@ -33,3 +33,7 @@ export const DateFormatValue = {
     MDY: "MM/dd/yyyy",
     YMD: "yyyy/MM/dd"
 }
+
+export const LocalStorageKey = {
+    dateFormat: "dateFormat"
+}

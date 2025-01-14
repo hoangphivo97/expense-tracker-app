@@ -5,16 +5,17 @@ import { MatButton } from '@angular/material/button';
 import { MatLabel } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { SettingsServiceService } from '../../services/SettingsService/settings-service.service';
-import { CurrencyStringValue, DateFormatStringValue, DateFormatValue } from '../../strings/login.strings';
+import { CurrencyStringValue, DateFormatStringValue, DateFormatValue, LocalStorageKey } from '../../strings/login.strings';
 import { CurrencyEnum, CurrencyDropdownList, DateFormatDropdownList } from '../../interface/settings.interface';
 import { UserServiceService } from '../../services/UserService/user-service.service';
 import { AsyncPipe } from '@angular/common';
+import { LocalStorageService } from '../../services/LocalStorage/local-storage.service';
 
 
 @Component({
   selector: 'app-settings-modal',
   standalone: true,
-  imports: [MatDialogActions, MatDialogContent, MatButton, MatLabel, MatSelect, MatOption, AsyncPipe],
+  imports: [MatDialogActions, MatDialogContent, MatButton, MatLabel, MatSelect, MatOption],
   templateUrl: './settings-modal.component.html',
   styleUrl: './settings-modal.component.scss'
 })
@@ -23,6 +24,7 @@ export class SettingsModalComponent implements OnInit {
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
   readonly settingsService = inject(SettingsServiceService)
   readonly userService = inject(UserServiceService)
+  readonly localStorageService = inject(LocalStorageService)
 
   currencyValue: CurrencyEnum = 0
 
@@ -44,13 +46,15 @@ export class SettingsModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.getDateFormat();
+    // this.localStorageService.clear();
   }
 
-  updateDateFormatGlobal(dateFormat: string) {
+  updateDateFormatGlobal(dateFormat: string, key: string) {
     this.settingsService.setDateFormat(dateFormat)
+    this.localStorageService.setItem(key, dateFormat);
   }
 
-  getDateFormat(){
+  getDateFormat() {
     this.selectedFormat = this.settingsService.getCurrDateFormat()
   }
 
@@ -66,8 +70,10 @@ export class SettingsModalComponent implements OnInit {
     //   error: e => console.log(e),
     //   complete: () => this.dialogRef.close({ title: "Settings", action: this.dialogActionEnum.Settings, isSuccess: true } as DialogData)
     // })
-    this.updateDateFormatGlobal(this.selectedFormat)
+    this.updateDateFormatGlobal(this.selectedFormat, LocalStorageKey.dateFormat)
+    this.dialogRef.close({ title: "Settings", action: this.dialogActionEnum.Settings, isSuccess: true } as DialogData)
   }
+
 
 
   onCancel() {

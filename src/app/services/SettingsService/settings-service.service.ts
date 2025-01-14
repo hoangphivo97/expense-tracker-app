@@ -10,7 +10,6 @@ import { DateFormatValue } from '../../strings/login.strings';
 })
 export class SettingsServiceService {
   private dateFormatSubject = new BehaviorSubject<string>(DateFormatValue.DMY);
-  dateFormat$ = this.dateFormatSubject.asObservable();
 
   constructor(private firestore: Firestore, private auth: Auth) {
 

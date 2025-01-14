@@ -6,7 +6,7 @@ import { ExpenseService } from '../../../services/ExpenseService/expense.service
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ExpenseListFieldName, ModalMessage } from '../../../strings/login.strings';
+import { DateFormatValue, ExpenseListFieldName, LocalStorageKey, ModalMessage } from '../../../strings/login.strings';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,6 +18,7 @@ import { BaseModalComponent } from '../../../modal/base-modal/base-modal.compone
 import { UserServiceService } from '../../../services/UserService/user-service.service';
 import { CurrencyEnum } from '../../../interface/settings.interface';
 import { SettingsServiceService } from '../../../services/SettingsService/settings-service.service';
+import { LocalStorageService } from '../../../services/LocalStorage/local-storage.service';
 
 @Component({
   selector: 'app-expense-list',
@@ -29,11 +30,14 @@ import { SettingsServiceService } from '../../../services/SettingsService/settin
 export class ExpenseListComponent implements OnInit, OnDestroy {
   readonly userService = inject(UserServiceService)
   readonly settingsService = inject(SettingsServiceService)
+  readonly localStorageService = inject(LocalStorageService)
+  readonly dialog = inject(MatDialog)
+
   expenseList: ExpenseList[] = [];
   searchTerm: string = ""
   expenseListTableName = ExpenseListFieldName
   displayedColumns: string[] = ['date', 'description', 'purpose', 'paid', 'for', 'amount', 'action'];
-  readonly dialog = inject(MatDialog)
+
   private destroy$ = new Subject<void>()
   dialogActionEnum = DialogActionEnum
 
@@ -41,6 +45,7 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getExpenseList();
+    this.initDateFormat();
   }
 
   getExpenseList() {
@@ -97,10 +102,14 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
     })
   }
 
-
-
   getEnumString(enumObj: any, value: number): string {
     return enumObj[value];
+  }
+
+  initDateFormat (){
+    if(!this.localStorageService.getItem(LocalStorageKey.dateFormat)){
+      this.localStorageService.setItem(LocalStorageKey.dateFormat,DateFormatValue.DMY)
+    }
   }
 
   ngOnDestroy(): void {
@@ -108,8 +117,8 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
     this.destroy$.complete(); // Complete the subject
   }
 
-  get GlobalDateFormat(){
-    return this.settingService.getCurrDateFormat()
+  get GlobalDateFormat(): string {
+    return this.localStorageService.getItem(LocalStorageKey.dateFormat) as string
   }
 
 }
