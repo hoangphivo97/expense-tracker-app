@@ -16,3 +16,4 @@ export interface UserSettings{
 export type CurrencyDropdownList = DropdownList<CurrencyEnum>
 
 export type DateFormatDropdownList = DropdownList<string>
+

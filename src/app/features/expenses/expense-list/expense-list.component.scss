@@ -1,20 +1,41 @@
-:host{
+:host {
+
     display: flex;
     flex-direction: column;
     height: 100vh;
     justify-content: space-between;
     align-items: center;
 
-    .create-expense-button{
+    .create-expense-button {
         margin-top: 5px;
     }
 
-    .button:hover{
+    .button:hover {
         cursor: pointer;
     }
+
+    .expense-list{
+        width: 60%;
+    }
+
+    .filter{
+        margin-top: 10px;
+
+        .search-bar{
+          display: flex;
+          justify-content: flex-end;  
+
+          .search-input{
+            width: 30%;
+          }
+        }
+    }
+
+
 }
 
-app-header, app-footer{
+app-header,
+app-footer {
     flex: 0 0 auto;
     flex-direction: column;
 }

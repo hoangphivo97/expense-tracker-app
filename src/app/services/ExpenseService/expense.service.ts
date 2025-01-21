@@ -47,13 +47,4 @@ export class ExpenseService {
   }
 
 
-  // searchExpenseDate(searchTerm: string): Observable<ExpenseList[]> {
-  //   const q = query(this.expensesCollection, where('date', '==', searchTerm))
-  //   return from(getDocs(q)).pipe(map(expenseSnapshot => {
-  //     return expenseSnapshot.docs.map(docs => ({
-  //       id: docs.id,
-  //       ...docs.data() as Omit<ExpenseList, 'id'>
-  //     }))
-  //   }))
-  // }
 }

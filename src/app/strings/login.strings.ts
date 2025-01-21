@@ -37,3 +37,9 @@ export const DateFormatValue = {
 export const LocalStorageKey = {
     dateFormat: "dateFormat"
 }
+
+export const PaidMethodStringValue = {
+    CASH: "Cash",
+    CREDIT_CARD: "Credit Card",
+    BANK_TRANSFER: "Bank Transfer"
+}

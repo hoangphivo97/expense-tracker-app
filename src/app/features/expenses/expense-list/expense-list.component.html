@@ -1,84 +1,94 @@
 <app-header></app-header>
 <div class="expense-list">
-    <form>
-        <div class="mb-6 row">
-            <!-- <label for="table-complete-search" class="col-xs-3 col-sm-auto col-form-label">Full text search:</label>
-            <div class="col-xs-3 col-sm-auto">
-                <input id="table-complete-search" type="text" class="form-control" name="searchTerm"
-                    [(ngModel)]="searchTerm" />
-            </div> -->
-            <!-- @if (service.loading$ | async) {
-            <span class="col col-form-label">Loading...</span>
-            } -->
-            <button class="create-expense-button btn" mat-button (click)="openCreateExpenseModal()">
-                Create New Expense
-            </button>
+    <section class="mb-6 row create">
+        <!-- <label for="table-complete-search" class="col-xs-3 col-sm-auto col-form-label">Full text search:</label>
+        <div class="col-xs-3 col-sm-auto">
+            <input id="table-complete-search" type="text" class="form-control" name="searchTerm"
+                [(ngModel)]="searchTerm" />
+        </div> -->
+        <!-- @if (service.loading$ | async) {
+        <span class="col col-form-label">Loading...</span>
+        } -->
+        <button class="create-expense-button btn" mat-button (click)="openCreateExpenseModal()">
+            Create New Expense
+        </button>
+    </section>
+
+    <section class="mb-6 row filter">
+        <div class="search-bar">
+            <mat-form-field class="search-input">
+                <mat-label>Search</mat-label>
+                <input matInput type="text" placeholder="Search" (keyup)="onSearch($event)" />
+            </mat-form-field>
         </div>
 
-        <table mat-table [dataSource]="expenseList">
-            <!--- Note that these columns can be defined in any order.
-        The actual rendered columns are set as a property on the row definition" -->
+    </section>
 
-            <!-- Position Column -->
-            <ng-container matColumnDef="date">
-                <th mat-header-cell *matHeaderCellDef>Date</th>
-                <td mat-cell *matCellDef="let element"> {{element.date | date : GlobalDateFormat}} </td>
-            </ng-container>
+    <table mat-table [dataSource]="dataSource">
+        <!--- Note that these columns can be defined in any order.
+    The actual rendered columns are set as a property on the row definition" -->
 
-            <!-- Name Column -->
-            <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef>Description</th>
-                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
-            </ng-container>
+        <!-- Position Column -->
+        <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef>Date</th>
+            <td mat-cell *matCellDef="let element"> {{element.date | date : GlobalDateFormat}} </td>
+        </ng-container>
 
-            <!-- Weight Column -->
-            <ng-container matColumnDef="purpose">
-                <th mat-header-cell *matHeaderCellDef>Purpose</th>
-                <td mat-cell *matCellDef="let element"> {{element.purpose}} </td>
-            </ng-container>
+        <!-- Name Column -->
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Description</th>
+            <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+        </ng-container>
 
-            <!-- Symbol Column -->
-            <ng-container matColumnDef="paid">
-                <th mat-header-cell *matHeaderCellDef>Paid</th>
-                <td mat-cell *matCellDef="let element"> {{element.paid}} </td>
-            </ng-container>
+        <!-- Weight Column -->
+        <ng-container matColumnDef="purpose">
+            <th mat-header-cell *matHeaderCellDef>Purpose</th>
+            <td mat-cell *matCellDef="let element"> {{element.purpose}} </td>
+        </ng-container>
 
-            <ng-container matColumnDef="for">
-                <th mat-header-cell *matHeaderCellDef>For</th>
-                <td mat-cell *matCellDef="let element"> {{element.for}} </td>
-            </ng-container>
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="paid">
+            <th mat-header-cell *matHeaderCellDef>Paid Method</th>
+            <td mat-cell *matCellDef="let element"> {{element.paid | enumToString}} </td>
+        </ng-container>
 
-            <ng-container matColumnDef="amount">
-                <th mat-header-cell *matHeaderCellDef>Amount</th>
-                <td mat-cell *matCellDef="let element"> {{element.amount | number: '3.0-0'}} </td>
-            </ng-container>
+        <ng-container matColumnDef="for">
+            <th mat-header-cell *matHeaderCellDef>For</th>
+            <td mat-cell *matCellDef="let element"> {{element.for}} </td>
+        </ng-container>
 
-            <ng-container matColumnDef="action">
-                <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let element">
-                    <a (click)="openDeleteConfirmModal(element.id)" class="button" aria-label="delete-btn">
-                        <mat-icon color="warn">delete</mat-icon>
-                    </a>
-                    <a (click)="openEditExpenseModal(element)" class="button" aria-label="edit-btn">
-                        <mat-icon color="accent">edit</mat-icon>
-                    </a>
-                </td>
-            </ng-container>
+        <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef>Amount</th>
+            <td mat-cell *matCellDef="let element"> {{element.amount | number: '3.0-0'}} </td>
+        </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element">
+                <a (click)="openDeleteConfirmModal(element.id)" class="button" aria-label="delete-btn">
+                    <mat-icon color="warn">delete</mat-icon>
+                </a>
+                <a (click)="openEditExpenseModal(element)" class="button" aria-label="edit-btn">
+                    <mat-icon color="accent">edit</mat-icon>
+                </a>
+            </td>
+        </ng-container>
 
-        <!-- <div class="d-flex justify-content-between p-2">
-            <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize">
-            </ngb-pagination>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
 
-            <select class="form-select" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
-                <option [ngValue]="2">2 items per page</option>
-                <option [ngValue]="4">4 items per page</option>
-                <option [ngValue]="6">6 items per page</option>
-            </select>
-        </div> -->
-    </form>
+
+
+    <!-- <div class="d-flex justify-content-between p-2">
+        <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize">
+        </ngb-pagination>
+
+        <select class="form-select" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
+            <option [ngValue]="2">2 items per page</option>
+            <option [ngValue]="4">4 items per page</option>
+            <option [ngValue]="6">6 items per page</option>
+        </select>
+    </div> -->
 </div>
 <app-footer></app-footer>

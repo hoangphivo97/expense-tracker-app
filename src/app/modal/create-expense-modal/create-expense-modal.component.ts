@@ -9,11 +9,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { ExpenseService } from '../../services/ExpenseService/expense.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { DateAdapter, MAT_DATE_FORMATS, MatDateFormats } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MatDateFormats, MatOption } from '@angular/material/core';
 import { CustomDateAdapter } from '../../shared/custom-date';
-import { createExpense, editExpense } from '../../interface/expense.interface';
+import { createExpense, editExpense, PaidMethodDropdownList, PaidMethodEnum } from '../../interface/expense.interface';
 import { DecimalPipe } from '@angular/common';
 import { Auth } from '@angular/fire/auth';
+import { MatSelect } from '@angular/material/select';
+import { PaidMethodStringValue } from '../../strings/login.strings';
 
 export const MY_DATE_FORMATS: MatDateFormats = {
   parse: {
@@ -30,7 +32,7 @@ export const MY_DATE_FORMATS: MatDateFormats = {
 @Component({
   selector: 'app-create-expense-modal',
   standalone: true,
-  imports: [MatDialogTitle, MatDialogContent, MatFormField, MatLabel, ReactiveFormsModule, MatInputModule, MatButton, MatDatepickerModule, DecimalPipe],
+  imports: [MatDialogTitle, MatDialogContent, MatFormField, MatLabel, ReactiveFormsModule, MatInputModule, MatButton, MatDatepickerModule, DecimalPipe, MatSelect, MatOption],
   providers: [
     { provide: DateAdapter, useClass: CustomDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
@@ -50,11 +52,19 @@ export class CreateExpenseModalComponent implements OnInit {
   formattedValue: string = '';
   dialogActionEnum = DialogActionEnum
 
+  paidMethodCurrVal: PaidMethodEnum = PaidMethodEnum.CASH
+
+  paidMethodDropdownList: PaidMethodDropdownList[] = [
+    { name: PaidMethodStringValue.CASH, value: PaidMethodEnum.CASH },
+    { name: PaidMethodStringValue.CREDIT_CARD, value: PaidMethodEnum.CREDIT_CARD },
+    { name: PaidMethodStringValue.BANK_TRANSFER, value: PaidMethodEnum.BANK_TRANSFER },
+  ]
+
   createExpenseForm = this.formBuilder.group({
     date: ['', Validators.required],
     description: ['', Validators.required],
     purpose: ['', Validators.required],
-    paid: ['', Validators.required],
+    paid: [0, Validators.required],
     for: [''],
     amount: [0, Validators.required]
   })
