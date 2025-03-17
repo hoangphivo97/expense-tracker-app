@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
     const userNameValue: string = this.loginForm.value.userName;
     const passWordValue: string = this.loginForm.value.passWord;
 
-    this.authService.signInWithEmailAndPassword(userNameValue, passWordValue).subscribe(() => {
+    this.authService.signInWithAdminAccount(userNameValue, passWordValue).subscribe(() => {
       this.router.navigate(['/expense-list']);
     })
 

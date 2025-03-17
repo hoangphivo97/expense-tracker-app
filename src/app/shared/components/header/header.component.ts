@@ -23,7 +23,7 @@ export class HeaderComponent {
   dialogActionEnum = DialogActionEnum
 
   logout() {
-    this.authService.signOut();
+    // this.authService.signOut();
   }
 
   openSettings() {
