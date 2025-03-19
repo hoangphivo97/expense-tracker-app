@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginDto } from 'src/DTO/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
@@ -14,11 +14,16 @@ export class UserService {
 
     async validateUser(username: string, password: string): Promise<User | null> {
         const user = await this.userModel.findOne({ username });
-
-        if (user && await bcrypt.compare(password, user.password)) {
-            return user;  // Return user if credentials are valid
+        if (!user) {
+            throw new BadRequestException("User not found");
         }
-        return null;  // Return null if no user found or password doesn't match
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            throw new UnauthorizedException("Invalid password")
+        }
+
+        return user;
     }
 
     // Issue JWT token for the user after successful login

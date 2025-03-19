@@ -12,4 +12,8 @@ export class LoginDto {
     @IsString()
     @IsNotEmpty()
     email: string;
+
+    @IsString()
+    @IsNotEmpty()
+    role: string;
 }

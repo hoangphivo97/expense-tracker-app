@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/user';
+  private apiUrl = 'http://localhost:3000/auth';
 
   constructor(private http: HttpClient) {
 

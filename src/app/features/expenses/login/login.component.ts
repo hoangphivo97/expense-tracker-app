@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/RouteGuard/auth.service';
+import { catchError, tap, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -31,9 +32,16 @@ export class LoginComponent implements OnInit {
     const userNameValue: string = this.loginForm.value.userName;
     const passWordValue: string = this.loginForm.value.passWord;
 
-    this.authService.signInWithAdminAccount(userNameValue, passWordValue).subscribe(() => {
+    // this.authService.signInWithAdminAccount(userNameValue, passWordValue).subscribe(() => {
+    //   this.router.navigate(['/expense-list']);
+    // })
+    this.authService.signInWithAdminAccount(userNameValue, passWordValue).pipe(tap(() => {
+
       this.router.navigate(['/expense-list']);
-    })
+    }), catchError(err => {
+      console.error('Đăng nhập thất bại:', err);
+      return throwError(() => err)
+    })).subscribe()
 
   }
 
