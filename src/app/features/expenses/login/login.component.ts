@@ -28,13 +28,11 @@ export class LoginComponent implements OnInit {
 
   }
 
-  async loginAction(): Promise<void> {
+  loginAction() {
     const userNameValue: string = this.loginForm.value.userName;
     const passWordValue: string = this.loginForm.value.passWord;
 
-    // this.authService.signInWithAdminAccount(userNameValue, passWordValue).subscribe(() => {
-    //   this.router.navigate(['/expense-list']);
-    // })
+
     this.authService.signInWithAdminAccount(userNameValue, passWordValue).pipe(tap(() => {
 
       this.router.navigate(['/expense-list']);

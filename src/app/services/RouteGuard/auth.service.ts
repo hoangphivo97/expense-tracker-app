@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 // import { signInWithEmailAndPassword, signOut, UserCredential } from 'firebase/auth';
 import { Observable } from 'rxjs';
-import { User } from '../../interface/user.interface';
+import { LoginResponse } from '../../interface/user.interface';
 import { HttpClient } from '@angular/common/http';
 
 
@@ -24,8 +24,9 @@ export class AuthService {
   //   }).catch((error) => console.log(error)))
   // }
 
-  signInWithAdminAccount(username: string, password: string): Observable<Object> {
-    return this.http.post(`${this.apiUrl}/login`, { username, password })
+  signInWithAdminAccount(username: string, password: string): Observable<LoginResponse> {
+    const loginData = { username, password }
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, loginData)
   }
 
 }
