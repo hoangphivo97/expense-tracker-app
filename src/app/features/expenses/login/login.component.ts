@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/RouteGuard/auth.service';
 import { catchError, tap, throwError } from 'rxjs';
+import { LoginResponse } from '../../../interface/user.interface';
+import { AuthStore } from '../../../services/RouteGuard/Akita/auth.store';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +18,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   router: Router;
 
-  constructor(private fb: FormBuilder, private rt: Router, public authService: AuthService) {
+  constructor(private fb: FormBuilder, private rt: Router, public authService: AuthService, private authStore: AuthStore) {
     this.loginForm = this.fb.group({
       userName: ['', Validators.required],
       passWord: ['', Validators.required]
@@ -33,8 +35,8 @@ export class LoginComponent implements OnInit {
     const passWordValue: string = this.loginForm.value.passWord;
 
 
-    this.authService.signInWithAdminAccount(userNameValue, passWordValue).pipe(tap(() => {
-
+    this.authService.signInWithAdminAccount(userNameValue, passWordValue).pipe(tap((res: LoginResponse) => {
+      this.authStore.update({ token: res.token })
       this.router.navigate(['/expense-list']);
     }), catchError(err => {
       console.error('Đăng nhập thất bại:', err);
