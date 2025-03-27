@@ -1,5 +1,4 @@
 import { CanActivate, Router } from '@angular/router';
-import { AuthService } from './auth.service';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Auth, User, user } from '@angular/fire/auth';
