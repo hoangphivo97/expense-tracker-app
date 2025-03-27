@@ -5,11 +5,12 @@ import { AuthService } from '../../../services/RouteGuard/auth.service';
 import { catchError, tap, throwError } from 'rxjs';
 import { LoginResponse } from '../../../interface/user.interface';
 import { AuthStore } from '../../../services/RouteGuard/Akita/auth.store';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatCheckboxModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
