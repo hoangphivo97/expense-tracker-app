@@ -74,6 +74,10 @@
             align-items: center;
             justify-content: center;
             display: inline-flex;
+
+            &:hover{
+                background-color: $secondary-black-color;
+            }
         }
 
         .forgot-btn {
