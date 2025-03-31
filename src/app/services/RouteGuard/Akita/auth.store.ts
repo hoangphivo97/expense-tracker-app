@@ -7,7 +7,7 @@ export interface AuthState {
 
 export function createInitialState(): AuthState {
     return {
-        token: null
+        token: typeof  window !== 'undefined' ? localStorage.getItem('token') || null : null 
     }
 }
 

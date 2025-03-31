@@ -54,3 +54,6 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+#Firebase Secret key
+expense-tracker-web-app-7c1d1-firebase-adminsdk-vu2nw-272986a332.json

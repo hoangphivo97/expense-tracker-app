@@ -13,19 +13,16 @@ export class authGuard implements CanActivate {
   private user$ = user(this.auth);
 
   canActivate(): Observable<boolean> {
-    const currentRoute = this.router.routerState.snapshot.url;
-    const currentRouteIsLogin = currentRoute === '/login';
-    return this.user$.pipe(
-      map((user: User): any => {
+    return new Observable<boolean>((observer) => {
+      this.auth.onAuthStateChanged((user) => {
         if (user) {
-          return true;
-        } else if (user && currentRouteIsLogin) {
-          this.router.navigate(['/']);
+          observer.next(true);
         } else {
-          this.router.navigate(['/login'])
-          return false
+          this.router.navigate(['/login']); // Redirect to login if not authenticated
+          observer.next(false);
         }
-      })
-    )
+        observer.complete();
+      });
+    });
   }
 }
