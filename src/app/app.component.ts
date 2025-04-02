@@ -1,20 +1,26 @@
-import { Component, importProvidersFrom } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { LoginComponent } from './features/expenses/login/login.component';
+import { AuthStore } from './services/RouteGuard/Akita/auth.store';
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, AngularFireAuthModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'expense-tracker-app';
+  authStore: AuthStore = inject(AuthStore)
 
-  static bootstrap(){
-    return importProvidersFrom([
-      LoginComponent
-    ])
+  ngOnInit(): void {
+    if (typeof window !== 'undefined') {
+      this.getToken()
+    }
+  }
+
+  getToken() {
+    const token = localStorage.getItem('token');
+    this.authStore.setToken(token)
   }
 }

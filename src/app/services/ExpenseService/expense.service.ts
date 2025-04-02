@@ -18,14 +18,14 @@ export class ExpenseService {
   }
 
 
-  getExpenseList(): Observable<ExpenseList[]> {
-    const userId = this.auth.currentUser?.uid;
-    if (!userId) throw new Error('User is not logged in');
-    // Use AngularFire's collectionData to fetch and map the data
-    // return collectionData(this.expensesCollection, { idField: 'id' }) as Observable<ExpenseList[]>;
-    const userExpensesQuery = query(this.expensesCollection, where('userId', '==', userId));
-    return collectionData(userExpensesQuery, { idField: 'id' }) as Observable<ExpenseList[]>;
-  }
+  // getExpenseList(): Observable<ExpenseList[]> {
+  //   const userId = this.auth.currentUser?.uid;
+  //   if (!userId) throw new Error('User is not logged in');
+  //   // Use AngularFire's collectionData to fetch and map the data
+  //   // return collectionData(this.expensesCollection, { idField: 'id' }) as Observable<ExpenseList[]>;
+  //   const userExpensesQuery = query(this.expensesCollection, where('userId', '==', userId));
+  //   return collectionData(userExpensesQuery, { idField: 'id' }) as Observable<ExpenseList[]>;
+  // }
 
   createExpense(data: Omit<createExpense, 'userId'>) {
     const userId = this.auth.currentUser?.uid;
