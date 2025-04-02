@@ -22,7 +22,7 @@ export class HeaderComponent {
   dialogActionEnum = DialogActionEnum
 
   logout() {
-    this.authService.logout();
+    console.log('click logout')
   }
 
   openSettings() {

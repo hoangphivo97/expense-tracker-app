@@ -6,16 +6,17 @@ export interface AuthState {
 }
 
 export function createInitialState(): AuthState {
+    const isBrowser = typeof window !== 'undefined';
     return {
-        token: typeof  window !== 'undefined' ? localStorage.getItem('token') || null : null 
+        token: isBrowser ? localStorage.getItem('token') || null : null
     }
 }
 
 
-@Injectable({providedIn: 'root'})
-@StoreConfig({name: 'auth'})
+@Injectable({ providedIn: 'root' })
+@StoreConfig({ name: 'auth' })
 export class AuthStore extends Store<AuthState> {
-    constructor(){
+    constructor() {
         super(createInitialState())
     }
 }
