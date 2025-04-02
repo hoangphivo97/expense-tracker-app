@@ -19,4 +19,13 @@ export class AuthStore extends Store<AuthState> {
     constructor() {
         super(createInitialState())
     }
+
+    setToken(token: string | null) {
+        this.update({ token });
+        if (token) {
+          localStorage.setItem('token', token);
+        } else {
+          localStorage.removeItem('token');
+        }
+      }
 }

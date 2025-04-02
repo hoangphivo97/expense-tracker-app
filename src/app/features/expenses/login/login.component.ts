@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
 
   loading: boolean = false;
 
-  constructor(private fb: FormBuilder, private rt: Router, public authService: AuthService, private authStore: AuthStore, private localStorage: LocalStorageService) {
+  constructor(private fb: FormBuilder, private rt: Router, public authService: AuthService, private authStore: AuthStore) {
     this.loginForm = this.fb.group({
       userName: ['', Validators.required],
       passWord: ['', Validators.required]
@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
 
   updateTokenAndReRoute(token: string, direction: string) {
     this.authStore.update({ token: token })
-    this.localStorage.setItem('token', token)
+    localStorage.setItem('token', token)
     this.router.navigate([direction]);
   }
 

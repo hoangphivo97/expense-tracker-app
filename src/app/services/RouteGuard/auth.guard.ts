@@ -1,7 +1,6 @@
 import { CanActivate, Router } from '@angular/router';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { Auth, User, user } from '@angular/fire/auth';
+import { AuthStore } from './Akita/auth.store';
 
 @Injectable({
   providedIn: 'root'
@@ -9,20 +8,16 @@ import { Auth, User, user } from '@angular/fire/auth';
 
 export class authGuard implements CanActivate {
   private router: Router = inject(Router);
-  private auth: Auth = inject(Auth);
-  private user$ = user(this.auth);
+  private authStore: AuthStore = inject(AuthStore)
 
-  canActivate(): Observable<boolean> {
-    return new Observable<boolean>((observer) => {
-      this.auth.onAuthStateChanged((user) => {
-        if (user) {
-          observer.next(true);
-        } else {
-          this.router.navigate(['/login']); // Redirect to login if not authenticated
-          observer.next(false);
-        }
-        observer.complete();
-      });
-    });
+  canActivate(): boolean {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  
+    if (token) {
+      return true;
+    }
+  
+    this.router.navigate(['/login']);
+    return false;
   }
 }

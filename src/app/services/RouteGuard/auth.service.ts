@@ -5,6 +5,7 @@ import { LoginResponse } from '../../interface/user.interface';
 import { HttpClient } from '@angular/common/http';
 import { AuthStore } from './Akita/auth.store';
 import { Router } from '@angular/router';
+import { LocalStorageService } from '../LocalStorage/local-storage.service';
 
 
 @Injectable({
@@ -24,13 +25,15 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, loginData)
   }
 
-  signInWithGoogleAccount(): Observable<any> {
+  signInWithGoogleAccount(): Observable<Object> {
     const provider = new GoogleAuthProvider();
 
     return from(signInWithPopup(this.auth, provider)).pipe(
       switchMap((result: UserCredential) =>
-        result.user.getIdToken().then(token =>
-          this.http.post(this.apiGoogleUrl, { uid: result.user.uid, token })
+        from(result.user.getIdToken()).pipe(
+          switchMap((token: string) =>
+            this.http.post(this.apiGoogleUrl, { uid: result.user.uid, token })
+          )
         )
       )
     );
