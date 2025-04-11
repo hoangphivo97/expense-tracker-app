@@ -26,6 +26,8 @@
     "@angular/ssr": "^18.2.8",
     "@datorama/akita": "^8.0.1",
     "@firebase/auth": "^1.7.9",
+    "@fortawesome/angular-fontawesome": "^0.15.0",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@ng-bootstrap/ng-bootstrap": "^17.0.1",
     "@ngrx/effects": "^18.1.1",
     "@ngrx/entity": "^18.1.1",

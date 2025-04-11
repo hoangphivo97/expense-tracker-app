@@ -14,3 +14,9 @@ export enum DialogActionEnum {
     Delete,
     Settings
 }
+
+export interface DialogError {
+    title: string;
+    errorMsg: string;
+    hint?: string;
+}
