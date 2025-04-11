@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, signInWithPopup, GoogleAuthProvider, UserCredential, signOut } from '@angular/fire/auth';
+import { Auth, signInWithPopup, GoogleAuthProvider, UserCredential, signOut, FacebookAuthProvider, AuthProvider } from '@angular/fire/auth';
 import { firstValueFrom, from, Observable, switchMap } from 'rxjs';
 import { LoginResponse } from '../../interface/user.interface';
 import { HttpClient } from '@angular/common/http';
@@ -15,6 +15,7 @@ export class AuthService {
   private auth = inject(Auth);
   private apiUrl = 'http://localhost:3000/auth';
   private apiGoogleUrl = 'http://localhost:3000/auth/google-login';
+  private apiFacebookUrl = 'http://localhost:3000/auth/facebook-login'
 
   constructor(private http: HttpClient, private authStore: AuthStore, private router: Router) {
 
@@ -28,11 +29,22 @@ export class AuthService {
   signInWithGoogleAccount(): Observable<Object> {
     const provider = new GoogleAuthProvider();
 
+    return this.signInWithProvider(provider, this.apiGoogleUrl)
+  }
+
+  signInWithFacebookAccount(): Observable<Object> {
+    const provider = new FacebookAuthProvider();
+    provider.addScope('email')
+
+    return this.signInWithProvider(provider, this.apiFacebookUrl)
+  }
+
+  private signInWithProvider(provider: AuthProvider, apiUrl: string): Observable<any> {
     return from(signInWithPopup(this.auth, provider)).pipe(
       switchMap((result: UserCredential) =>
         from(result.user.getIdToken()).pipe(
           switchMap((token: string) =>
-            this.http.post(this.apiGoogleUrl, { uid: result.user.uid, token })
+            this.http.post(apiUrl, { uid: result.user.uid, token })
           )
         )
       )

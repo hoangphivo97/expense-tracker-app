@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/RouteGuard/auth.service';
@@ -6,9 +6,11 @@ import { catchError, tap, throwError } from 'rxjs';
 import { LoginResponse } from '../../../interface/user.interface';
 import { AuthStore } from '../../../services/RouteGuard/Akita/auth.store';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { error } from 'console';
-import { UserCredential } from '@firebase/auth';
-import { LocalStorageService } from '../../../services/LocalStorage/local-storage.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ErrorModalComponent } from '../../../modal/error-modal/error-modal.component';
+import { DialogError } from '../../../interface/modal.interface';
+import { FirebaseError } from 'firebase/app';
+import { getFriendlyFirebaseError } from '../../../shared/utils/firebase-error.helper';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +23,7 @@ import { LocalStorageService } from '../../../services/LocalStorage/local-storag
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   router: Router;
+  readonly dialog = inject(MatDialog)
 
   loading: boolean = false;
 
@@ -43,8 +46,9 @@ export class LoginComponent implements OnInit {
 
     this.authService.signInWithUserAccount(userNameValue, passWordValue).pipe(tap((res: LoginResponse) => {
       this.updateTokenAndReRoute(res.token, '/expense-list')
-    }), catchError(err => {
-      console.error('Đăng nhập thất bại:', err);
+    }), catchError((err: FirebaseError) => {
+      // console.error('Đăng nhập thất bại:', err);
+      this.openErrorModal(err)
       return throwError(() => err)
     })).subscribe()
 
@@ -58,8 +62,8 @@ export class LoginComponent implements OnInit {
       tap((res: any) => {
         this.updateTokenAndReRoute(res.token, '/expense-list')
         this.loading = false;
-      }), catchError(err => {
-        console.error('login failed', err)
+      }), catchError((err: FirebaseError) => {
+        this.openErrorModal(err)
         this.loading = false;
         return throwError(() => err)
       })
@@ -67,7 +71,19 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithFacebook() {
+    if (this.loading) return
+    this.loading = true
 
+    this.authService.signInWithFacebookAccount().pipe(
+      tap((res: any) => {
+        this.updateTokenAndReRoute(res.token, '/expense-list')
+        this.loading = false;
+      }), catchError((err: FirebaseError) => {
+        this.openErrorModal(err)
+        this.loading = false;
+        return throwError(() => err)
+      })
+    ).subscribe()
   }
 
   updateTokenAndReRoute(token: string, direction: string) {
@@ -76,4 +92,11 @@ export class LoginComponent implements OnInit {
     this.router.navigate([direction]);
   }
 
+  openErrorModal(error: FirebaseError) {
+    this.dialog.open(ErrorModalComponent, {
+      width: '400px',
+      data: getFriendlyFirebaseError(error),
+      disableClose: true
+    })
+  }
 }
