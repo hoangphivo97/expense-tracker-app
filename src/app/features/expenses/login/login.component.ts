@@ -7,10 +7,8 @@ import { LoginResponse } from '../../../interface/user.interface';
 import { AuthStore } from '../../../services/RouteGuard/Akita/auth.store';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
-import { ErrorModalComponent } from '../../../modal/error-modal/error-modal.component';
-import { DialogError } from '../../../interface/modal.interface';
 import { FirebaseError } from 'firebase/app';
-import { getFriendlyFirebaseError } from '../../../shared/utils/firebase-error.helper';
+import { ErrorModalService } from '../../../services/utils/error-modal.service';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +25,7 @@ export class LoginComponent implements OnInit {
 
   loading: boolean = false;
 
-  constructor(private fb: FormBuilder, private rt: Router, public authService: AuthService, private authStore: AuthStore) {
+  constructor(private fb: FormBuilder, private rt: Router, public authService: AuthService, private authStore: AuthStore, private errorModalService: ErrorModalService) {
     this.loginForm = this.fb.group({
       userName: ['', Validators.required],
       passWord: ['', Validators.required]
@@ -48,7 +46,7 @@ export class LoginComponent implements OnInit {
       this.updateTokenAndReRoute(res.token, '/expense-list')
     }), catchError((err: FirebaseError) => {
       // console.error('Đăng nhập thất bại:', err);
-      this.openErrorModal(err)
+      this.errorModalService.openErrorModal(err)
       return throwError(() => err)
     })).subscribe()
 
@@ -63,7 +61,7 @@ export class LoginComponent implements OnInit {
         this.updateTokenAndReRoute(res.token, '/expense-list')
         this.loading = false;
       }), catchError((err: FirebaseError) => {
-        this.openErrorModal(err)
+        this.errorModalService.openErrorModal(err)
         this.loading = false;
         return throwError(() => err)
       })
@@ -79,7 +77,7 @@ export class LoginComponent implements OnInit {
         this.updateTokenAndReRoute(res.token, '/expense-list')
         this.loading = false;
       }), catchError((err: FirebaseError) => {
-        this.openErrorModal(err)
+        this.errorModalService.openErrorModal(err)
         this.loading = false;
         return throwError(() => err)
       })
@@ -92,11 +90,5 @@ export class LoginComponent implements OnInit {
     this.router.navigate([direction]);
   }
 
-  openErrorModal(error: FirebaseError) {
-    this.dialog.open(ErrorModalComponent, {
-      width: '400px',
-      data: getFriendlyFirebaseError(error),
-      disableClose: true
-    })
-  }
+
 }
