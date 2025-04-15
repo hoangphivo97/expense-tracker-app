@@ -1,20 +1,27 @@
 <div class="register-modal">
     <h2 class="title">Sign Up</h2>
 
-    <div class="form">
+    <div [formGroup]="registerForm" class="form">
         <label>Email</label>
-        <input placeholder="Email" />
+        <input placeholder="Email" formControlName="email" />
+        <!-- @if (this.hasRequiredError()) {
+            <div class="error-message">
+                Email is required
+            </div>
+        } -->
 
         <label>Password</label>
-        <input placeholder="password" />
+        <input placeholder="password" type="password" formControlName="passWord"/>
+
 
         <label>Confirm password</label>
-        <input placeholder="confirm password" />
+        <input placeholder="confirm password" type="password" formControlName="confirmPassword"/>
+
     </div>
 
 
     <div class="btn-group">
         <button class="sign-up-btn">Sign up</button>
-        <button class="cancel-btn">Cancel</button>
+        <button (click)="onCancel()" class="cancel-btn ripple-hover">Cancel</button>
     </div>
 </div>

@@ -93,7 +93,6 @@ export class LoginComponent implements OnInit {
 
   openRegisterModal(){
     this.dialog.open(RegisterModalComponent, {
-      height: '500px',
       width: '450px',
       disableClose: false
     })

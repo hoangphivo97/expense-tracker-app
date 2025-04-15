@@ -30,6 +30,17 @@
             border-style: solid;
             border-color: $primary-grey-color;
         }
+
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+
+
+        input.ng-touched.ng-invalid {
+            border-color: red;
+        }
     }
 
     .btn-group {
@@ -61,11 +72,20 @@
             }
         }
 
-        .cancel-btn{
-
-            &:hover {
-                background-color: $primary-dangerous-text;
-            }
+        .cancel-btn {
+            background-color: transparent;
+            color: $cancel-color-button-text;
+            border: 1px solid $cancel-color-border;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
+
+        .cancel-btn:hover {
+            background-color: $cancel-bg-hover-color;
+            color: $cancel-hover-color;
+        }
+
     }
 }

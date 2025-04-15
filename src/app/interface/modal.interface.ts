@@ -12,7 +12,9 @@ export enum DialogActionEnum {
     Create,
     Edit,
     Delete,
-    Settings
+    Settings,
+    Cancel,
+    Register
 }
 
 export interface DialogError {

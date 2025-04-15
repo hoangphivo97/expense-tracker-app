@@ -18,4 +18,8 @@ export class ErrorModalService {
       disableClose: true
     })
   }
+
+  closeAllModals() {
+    this.dialog.closeAll();
+  }
 }
