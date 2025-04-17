@@ -49,19 +49,22 @@ export class RegisterModalComponent {
     })
   }
 
-  // hasRequiredError(): boolean {
-  //   const controls = [
-  //     this.registerForm.get('email'),
-  //     this.registerForm.get('passWord'),
-  //     this.registerForm.get('confirmPassword')
-  //   ];
+  getErrorMessage(fieldName: string): string | null {
+    const control = this.registerForm.get(fieldName)
+    if (control?.touched) {
+      if (control.hasError('required')) return 'This field is required';
+      if (control.hasError('email')) return 'Invalid Email';
+    }
 
-  //   return controls.some(control =>
-  //     control?.touched && control.invalid && control.hasError('required')
-  //   );
-  // }
+    return null
+  }
 
+  get confirmPasswordField(){
+    return this.registerForm.get('confirmPassword')
+  }
 
-
+  get checkPassAndConfPass() {
+    return this.registerForm.get('passWord')?.value !== this.confirmPasswordField?.value
+  }
 
 }

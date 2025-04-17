@@ -4,18 +4,33 @@
     <div [formGroup]="registerForm" class="form">
         <label>Email</label>
         <input placeholder="Email" formControlName="email" />
-        <!-- @if (this.hasRequiredError()) {
-            <div class="error-message">
-                Email is required
-            </div>
-        } -->
+        @if (getErrorMessage('email')) {
+        <div class="error-message">
+            {{getErrorMessage('email')}}
+        </div>
+        }
 
         <label>Password</label>
-        <input placeholder="password" type="password" formControlName="passWord"/>
+        <input placeholder="password" type="password" formControlName="passWord" />
+        @if (this.getErrorMessage('passWord')) {
+        <div class="error-message">
+            {{this.getErrorMessage('passWord')}}
+        </div>
+        }
 
 
         <label>Confirm password</label>
-        <input placeholder="confirm password" type="password" formControlName="confirmPassword"/>
+        <input placeholder="confirm password" type="password" formControlName="confirmPassword" />
+        @if (this.getErrorMessage('confirmPassword')) {
+        <div class="error-message">
+            {{this.getErrorMessage('confirmPassword')}}
+        </div>
+        }
+        @if (confirmPasswordField?.touched && checkPassAndConfPass) {
+            <div class="error-message">
+                Confirm password does not match
+            </div>
+        }
 
     </div>
 
