@@ -37,6 +37,6 @@ describe('LoginComponent', () => {
   it("should failed to login", () => {
     expect(component.loginForm.setValue({userName:"test",passWord: "test"}));
     component.loginAction();
-    expect(component.).toBe(LoginStrings.loginError)
+    expect(component.errorMessage).toBe(LoginStrings.loginError)
   })
 });

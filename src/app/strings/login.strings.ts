@@ -43,8 +43,3 @@ export const PaidMethodStringValue = {
     CREDIT_CARD: "Credit Card",
     BANK_TRANSFER: "Bank Transfer"
 }
-
-export const ConfirmExitModal = {
-    TITLE: "Exit Modal",
-    YOUR_DATA_WILL_LOST : "You are going to exit this modal and will lost all data"
-}
