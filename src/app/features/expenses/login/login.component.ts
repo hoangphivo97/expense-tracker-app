@@ -9,6 +9,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { FirebaseError } from 'firebase/app';
 import { ErrorModalService } from '../../../services/utils/error-modal.service';
+import { RegisterModalComponent } from '../../../modal/register-modal/register-modal.component';
 
 @Component({
   selector: 'app-login',
@@ -34,6 +35,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.disableSignInAndRegister();
 
   }
 
@@ -90,5 +92,15 @@ export class LoginComponent implements OnInit {
     this.router.navigate([direction]);
   }
 
+  openRegisterModal(){
+    this.dialog.open(RegisterModalComponent, {
+      width: '450px',
+      disableClose: false
+    })
+  }
+
+  disableSignInAndRegister(){
+    this.loginForm.disable()
+  }
 
 }
