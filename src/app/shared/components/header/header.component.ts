@@ -1,5 +1,6 @@
 import { Component, inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { AuthService } from '../../../services/RouteGuard/auth.service';
+import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,7 +15,7 @@ import { DialogActionEnum, DialogData } from '../../../interface/modal.interface
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  constructor(public authService: AuthService) { }
+  constructor(public authService: AuthService, private router: Router) { }
   readonly dialog = inject(MatDialog)
 
   currentDayAndTime: string = ""
@@ -22,7 +23,7 @@ export class HeaderComponent {
   dialogActionEnum = DialogActionEnum
 
   logout() {
-    this.authService.logout();
+    this.authService.signOut();
   }
 
   openSettings() {

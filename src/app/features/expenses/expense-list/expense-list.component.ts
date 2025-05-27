@@ -21,7 +21,6 @@ import { SettingsServiceService } from '../../../services/SettingsService/settin
 import { LocalStorageService } from '../../../services/LocalStorage/local-storage.service';
 import { MatInputModule } from '@angular/material/input';
 import { EnumToStringPipe } from '../../../shared/EnumToStringPipe/enum-to-string.pipe';
-import { AuthStore } from '../../../services/RouteGuard/Akita/auth.store';
 
 @Component({
   selector: 'app-expense-list',
@@ -39,33 +38,26 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['date', 'description', 'purpose', 'paid', 'for', 'amount', 'action'];
 
-  dataSource = new MatTableDataSource<ExpenseList>();
+  dataSource= new MatTableDataSource<ExpenseList>();
 
   private destroy$ = new Subject<void>()
 
   dialogActionEnum = DialogActionEnum
   paidMethodEnum = PaidMethodEnum
 
-  constructor(private expenseService: ExpenseService, private renderer: Renderer2, private settingService: SettingsServiceService, private authStore: AuthStore) { }
+  constructor(private expenseService: ExpenseService, private renderer: Renderer2, private settingService: SettingsServiceService) { }
 
   ngOnInit() {
-    this.getToken();
     this.getExpenseList();
     this.initDateFormat();
   }
 
   getExpenseList() {
-    // this.expenseService.getExpenseList().pipe(takeUntil(this.destroy$)).subscribe((data: ExpenseList[]) => {
-    //   this.dataSource.data = data
-    // }, (error) => {
-    //   console.log(error)
-    // })
-  }
-
-  getToken() {
-    const token: string | null = localStorage.getItem('token');
-    if (!token) return
-    this.authStore.setToken(token);
+    this.expenseService.getExpenseList().pipe(takeUntil(this.destroy$)).subscribe((data: ExpenseList[]) => {
+      this.dataSource.data = data
+    }, (error) => {
+      console.log(error)
+    })
   }
 
   openCreateExpenseModal() {
