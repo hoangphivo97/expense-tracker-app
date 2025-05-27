@@ -35,6 +35,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.disableSignInAndRegister();
 
   }
 
@@ -96,6 +97,10 @@ export class LoginComponent implements OnInit {
       width: '450px',
       disableClose: false
     })
+  }
+
+  disableSignInAndRegister(){
+    this.loginForm.disable()
   }
 
 }
